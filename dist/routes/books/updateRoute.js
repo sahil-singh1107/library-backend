@@ -13,35 +13,29 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const admin_1 = __importDefault(require("../../middleware/admin"));
+const updateRouter = express_1.default.Router();
 const client_1 = require("@prisma/client");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const prisma = new client_1.PrismaClient();
-const loginRouter = express_1.default.Router();
-const secret = process.env.JWT_SECRET;
-loginRouter.post("/", function (req, res) {
+updateRouter.put("/", admin_1.default, function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { email, password } = req.body;
+        const { title, newTitle, newAuthor, newpublicationYear } = req.body;
         try {
-            const user = yield prisma.user.findUnique({ where: { email }, select: { email: true, password: true } });
-            if (!user) {
-                res.status(404).json({ message: "Either user doesn't exist or password is wrong" });
-                return;
-            }
-            const passwordMatch = yield bcrypt_1.default.compare(password, user.password);
-            if (!passwordMatch) {
-                res.status(404).json({ message: "Either user doesn't exist or password is wrong" });
-                return;
-            }
-            const token = jsonwebtoken_1.default.sign({ email }, secret, { expiresIn: "2h" });
-            res.status(200).json({ token, message: "Login Successful" });
+            const book = yield prisma.book.findFirst({ where: { title } });
+            if (newTitle)
+                yield prisma.book.update({ where: { id: book === null || book === void 0 ? void 0 : book.id }, data: { title: newTitle } });
+            if (newAuthor)
+                yield prisma.book.update({ where: { id: book === null || book === void 0 ? void 0 : book.id }, data: { author: newAuthor } });
+            if (newpublicationYear)
+                yield prisma.book.update({ where: { id: book === null || book === void 0 ? void 0 : book.id }, data: { publicationYear: newpublicationYear } });
+            res.status(201).json({ message: "Book updated sucessfully" });
             return;
         }
         catch (error) {
             console.log(error);
-            res.status(500).json({ message: "Internal Serve Error" });
+            res.status(500).json({ message: "Internal Server error" });
             return;
         }
     });
 });
-exports.default = loginRouter;
+exports.default = updateRouter;

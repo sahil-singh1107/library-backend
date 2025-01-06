@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/routes/auth/loginRoute.ts","./src/routes/auth/signupRoute.ts"],"version":"5.7.2"}
+{"root":["./src/index.ts","./src/middleware/admin.ts","./src/routes/auth/loginRoute.ts","./src/routes/auth/signupRoute.ts","./src/routes/books/addRoute.ts","./src/routes/books/deleteRoute.ts","./src/routes/books/readRoute.ts","./src/routes/books/updateRoute.ts"],"version":"5.7.2"}
