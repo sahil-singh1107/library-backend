@@ -23,7 +23,7 @@ model User {
   lastName String
   phone_number String
   books Book[]
-  transaction Transaction?
+  transaction Transaction[]
 }
 
 model Book {
@@ -34,15 +34,15 @@ model Book {
   availabilityStatus Boolean @default(true)
   user User? @relation(fields: [userId], references: [id])
   userId Int?
-  transaction Transaction?
+  transaction Transaction[]
 }
 
 model Transaction {
   id Int @id @default(autoincrement())
   user User @relation(fields: [userId], references: [id])
   book Book @relation(fields: [bookId], references: [id])
-  bookId Int @unique
-  userId Int @unique
+  bookId Int 
+  userId Int 
   borrowDate String
-  returnDate String
+  returnDate String @default("NULL")
 }

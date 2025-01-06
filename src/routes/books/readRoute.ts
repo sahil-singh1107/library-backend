@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 
 readRouter.get("/", async function(req, res) {
     try {
-        const books = await prisma.book.findMany({where: {availabilityStatus: true}});
+        const books = await prisma.book.findMany();
         res.status(200).json({message : books});
         return;
     } catch (error) {

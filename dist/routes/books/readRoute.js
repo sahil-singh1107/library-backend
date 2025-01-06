@@ -19,7 +19,7 @@ const prisma = new client_1.PrismaClient();
 readRouter.get("/", function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const books = yield prisma.book.findMany({ where: { availabilityStatus: true } });
+            const books = yield prisma.book.findMany();
             res.status(200).json({ message: books });
             return;
         }
