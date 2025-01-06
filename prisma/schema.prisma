@@ -45,4 +45,5 @@ model Transaction {
   userId Int 
   borrowDate String
   returnDate String @default("NULL")
+  status String
 }

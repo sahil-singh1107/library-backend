@@ -14,23 +14,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const admin_1 = __importDefault(require("../../middleware/admin"));
-const deleteRouter = express_1.default.Router();
+const updatetransactionRouter = express_1.default.Router();
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-deleteRouter.delete("/", admin_1.default, function (req, res) {
+updatetransactionRouter.put("/", admin_1.default, function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { title } = req.body;
+        const { email, title } = req.body;
         try {
+            const user = yield prisma.user.findUnique({ where: { email } });
             const book = yield prisma.book.findFirst({ where: { title } });
-            yield prisma.book.delete({ where: { id: book === null || book === void 0 ? void 0 : book.id } });
-            res.status(201).json({ message: "Book deleted sucessfully" });
+            if (!user || !book) {
+                res.status(400).json({ message: "User or Book doesn't exist" });
+                return;
+            }
+            const transaction = yield prisma.transaction.findFirst({ where: { userId: user.id, bookId: book.id } });
+            if (!transaction) {
+                res.status(400).json({ message: "Transaction doesn't exist" });
+                return;
+            }
+            yield prisma.transaction.update({ where: { id: transaction.id }, data: { status: "approved" } });
+            yield prisma.book.update({ where: { id: book.id }, data: { availabilityStatus: false, userId: user.id } });
+            res.status(200).json({ message: "Transaction and book updated successfully" });
             return;
         }
         catch (error) {
             console.log(error);
-            res.status(500).json({ message: "Internal Server error" });
+            res.status(500).json({ message: "Internal Server Error" });
             return;
         }
     });
 });
-exports.default = deleteRouter;
+exports.default = updatetransactionRouter;

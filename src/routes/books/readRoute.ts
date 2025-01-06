@@ -3,7 +3,6 @@ const readRouter = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-
 readRouter.get("/", async function(req, res) {
     try {
         const books = await prisma.book.findMany();

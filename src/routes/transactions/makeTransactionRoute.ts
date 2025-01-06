@@ -1,10 +1,10 @@
 import express from "express"
 import checkUser from "../../middleware/auth";
-const transactionRouter = express.Router();
+const maketransactionRouter = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-transactionRouter.post("/", checkUser, async function (req, res) {
+maketransactionRouter.post("/", checkUser, async function (req, res) {
     const { email, title } = req.body
 
     try {
@@ -24,7 +24,8 @@ transactionRouter.post("/", checkUser, async function (req, res) {
                 bookId: book.id,
                 userId: user.id,
                 borrowDate: new Date().toISOString(),
-                returnDate: "NULL"
+                returnDate: "NULL",
+                status : "pending"
             }
         })
         res.status(201).json({message : "Transaction created successfully"});
@@ -34,3 +35,5 @@ transactionRouter.post("/", checkUser, async function (req, res) {
         return;
     }
 })
+
+export default maketransactionRouter

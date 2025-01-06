@@ -14,23 +14,32 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const admin_1 = __importDefault(require("../../middleware/admin"));
-const deleteRouter = express_1.default.Router();
+const readtransactionRouter = express_1.default.Router();
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-deleteRouter.delete("/", admin_1.default, function (req, res) {
+readtransactionRouter.get("/", admin_1.default, function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { title } = req.body;
         try {
-            const book = yield prisma.book.findFirst({ where: { title } });
-            yield prisma.book.delete({ where: { id: book === null || book === void 0 ? void 0 : book.id } });
-            res.status(201).json({ message: "Book deleted sucessfully" });
+            const data = yield prisma.transaction.findMany({ where: { status: "pending" }, include: {
+                    user: {
+                        select: {
+                            email: true
+                        }
+                    },
+                    book: {
+                        select: {
+                            title: true
+                        }
+                    }
+                } });
+            res.status(200).json({ message: data });
             return;
         }
         catch (error) {
             console.log(error);
-            res.status(500).json({ message: "Internal Server error" });
+            res.status(500).json({ message: "Internal Serve Error" });
             return;
         }
     });
 });
-exports.default = deleteRouter;
+exports.default = readtransactionRouter;

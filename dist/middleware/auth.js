@@ -12,25 +12,35 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const admin_1 = __importDefault(require("../../middleware/admin"));
-const deleteRouter = express_1.default.Router();
+exports.default = checkUser;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const client_1 = require("@prisma/client");
+const secret = process.env.JWT_SECRET;
 const prisma = new client_1.PrismaClient();
-deleteRouter.delete("/", admin_1.default, function (req, res) {
+function checkUser(req, res, next) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { title } = req.body;
-        try {
-            const book = yield prisma.book.findFirst({ where: { title } });
-            yield prisma.book.delete({ where: { id: book === null || book === void 0 ? void 0 : book.id } });
-            res.status(201).json({ message: "Book deleted sucessfully" });
+        const { token } = req.body;
+        if (!token) {
+            res.status(401).json({ message: "Authentication token is required" });
             return;
+        }
+        try {
+            const decoded = jsonwebtoken_1.default.verify(token, secret);
+            if (!decoded.email) {
+                res.status(401).json({ message: "Invalid token" });
+                return;
+            }
+            const user = yield prisma.user.findUnique({ where: { email: decoded.email } });
+            if (!user) {
+                res.status(401).json({ message: "User not found or not logged in" });
+                return;
+            }
+            req.email = user.email;
+            next();
         }
         catch (error) {
             console.log(error);
-            res.status(500).json({ message: "Internal Server error" });
-            return;
+            res.status(401).json({ message: "Invalid or expired token" });
         }
     });
-});
-exports.default = deleteRouter;
+}
