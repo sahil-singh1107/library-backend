@@ -1,5 +1,5 @@
 import express from "express"
-const dotenv = require('dotenv');
+import * as dotenv from 'dotenv';
 import signupRouter from "./routes/auth/signupRoute";
 import loginRouter from "./routes/auth/loginRoute";
 import updateRouter from "./routes/books/updateRoute";
