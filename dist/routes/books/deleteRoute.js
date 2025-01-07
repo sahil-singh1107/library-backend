@@ -17,7 +17,7 @@ const admin_1 = __importDefault(require("../../middleware/admin"));
 const deleteRouter = express_1.default.Router();
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-deleteRouter.delete("/", admin_1.default, function (req, res) {
+deleteRouter.post("/", admin_1.default, function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const { title } = req.body;
         try {

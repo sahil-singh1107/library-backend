@@ -4,7 +4,7 @@ const readtransactionRouter = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-readtransactionRouter.get("/", checkAdmin, async function(req, res) {
+readtransactionRouter.get("/", async function(req, res) {
     try {
         const data = await prisma.transaction.findMany({where: {status : "pending"}, include: {
             user : {

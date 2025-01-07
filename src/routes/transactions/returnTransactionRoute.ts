@@ -5,9 +5,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 returntransactionRouter.put("/", checkUser, async function(req, res) {
-    const {email, title} = req.body
+    const {userId, title} = req.body
     try {
-        const user = await prisma.user.findUnique({where: {email}})
+        const user = await prisma.user.findUnique({where: {id : userId}})
         const book = await prisma.book.findFirst({where: {title}})
         if (!user || !book) {
             res.status(400).json({message : "User or Book doesn't exist"})

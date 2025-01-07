@@ -34,7 +34,7 @@ loginRouter.post("/", function (req, res) {
                 return;
             }
             const token = jsonwebtoken_1.default.sign({ email }, secret, { expiresIn: "2h" });
-            res.status(200).json({ token, message: "Login Successful" });
+            res.status(200).json({ token, message: "Login Successful", email: user.email });
             return;
         }
         catch (error) {

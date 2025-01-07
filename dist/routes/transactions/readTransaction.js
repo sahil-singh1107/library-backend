@@ -13,11 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const admin_1 = __importDefault(require("../../middleware/admin"));
 const readtransactionRouter = express_1.default.Router();
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-readtransactionRouter.get("/", admin_1.default, function (req, res) {
+readtransactionRouter.get("/", function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const data = yield prisma.transaction.findMany({ where: { status: "pending" }, include: {

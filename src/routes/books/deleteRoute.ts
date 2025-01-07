@@ -4,7 +4,7 @@ const deleteRouter = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-deleteRouter.delete("/", checkAdmin, async function(req, res) {
+deleteRouter.post("/", checkAdmin, async function(req, res) {
     const {title} = req.body
     try {
         const book = await prisma.book.findFirst({where: {title}})

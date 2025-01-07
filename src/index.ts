@@ -11,6 +11,7 @@ import maketransactionRouter from "./routes/transactions/makeTransactionRoute";
 import readtransactionRouter from "./routes/transactions/readTransaction";
 import updatetransactionRouter from "./routes/transactions/updateTransaction";
 import returntransactionRouter from "./routes/transactions/returnTransactionRoute";
+import statisticsRouter from "./routes/transactions/libraryStatisticsRoute";
 var cors = require('cors')
 dotenv.config();
 const port = process.env.PORT || 3000
@@ -26,12 +27,13 @@ app.use("/api/v1/login", loginRouter);
 app.use("/api/v1/addBook", addRouter);
 app.use("/api/v1/updateBook", updateRouter);
 app.use("/api/v1/allBooks", readRouter);
-app.use("api/v1/deleteBook", deleteRouter)
+app.use("/api/v1/deleteBook", deleteRouter)
 app.use("/api/v1/userbooks", userbookRouter)
 app.use("/api/v1/maketransaction", maketransactionRouter)
 app.use("/api/v1/readtransaction", readtransactionRouter)
 app.use("/api/v1/updatetransaction", updatetransactionRouter)
 app.use("/api/v1/returntransaction", returntransactionRouter);
+app.use("/api/v1/getStats", statisticsRouter)
 
 app.listen(port, () =>{
     console.log(`listening on port ${port}`)

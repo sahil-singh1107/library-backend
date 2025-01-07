@@ -4,10 +4,10 @@ const userbookRouter = express.Router();
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-userbookRouter.get("/", checkUser, async function(req, res) {
-    const {email} = req.body;
+userbookRouter.post("/", checkUser, async function(req, res) {
+    const {userId} = req.body;
     try {
-        const user = await prisma.user.findUnique({where: {email}});
+        const user = await prisma.user.findUnique({where: {id : userId}});
         const books = await prisma.book.findMany({where: {userId : user?.id}});
         res.status(200).json({message : books});
         return;

@@ -35,8 +35,9 @@ function checkUser(req, res, next) {
                 res.status(401).json({ message: "User not found or not logged in" });
                 return;
             }
-            req.email = user.email;
+            req.body.userId = user.id;
             next();
+            return;
         }
         catch (error) {
             console.log(error);

@@ -19,9 +19,9 @@ const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 maketransactionRouter.post("/", auth_1.default, function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { email, title } = req.body;
+        const { userId, title } = req.body;
         try {
-            const user = yield prisma.user.findUnique({ where: { email } });
+            const user = yield prisma.user.findUnique({ where: { id: userId } });
             const book = yield prisma.book.findFirst({ where: { title } });
             if (!user) {
                 res.status(404).json({ message: "User not found" });
@@ -41,6 +41,7 @@ maketransactionRouter.post("/", auth_1.default, function (req, res) {
                 }
             });
             res.status(201).json({ message: "Transaction created successfully" });
+            return;
         }
         catch (error) {
             console.log(error);

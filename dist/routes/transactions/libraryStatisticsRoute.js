@@ -13,24 +13,34 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const auth_1 = __importDefault(require("../../middleware/auth"));
-const userbookRouter = express_1.default.Router();
+const statisticsRouter = express_1.default.Router();
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
-userbookRouter.post("/", auth_1.default, function (req, res) {
+statisticsRouter.get("/", function (req, res) {
     return __awaiter(this, void 0, void 0, function* () {
-        const { userId } = req.body;
         try {
-            const user = yield prisma.user.findUnique({ where: { id: userId } });
-            const books = yield prisma.book.findMany({ where: { userId: user === null || user === void 0 ? void 0 : user.id } });
-            res.status(200).json({ message: books });
+            const pendingBooks = yield prisma.transaction.count({
+                where: { status: "pending" },
+            });
+            const approvedBooks = yield prisma.transaction.count({
+                where: { status: "approved" },
+            });
+            const returnedBooks = yield prisma.transaction.count({
+                where: { status: "returned" },
+            });
+            const chartData = [
+                { request: "pending", books: pendingBooks, fill: "var(--color-pending)" },
+                { request: "approved", books: approvedBooks, fill: "var(--color-approved)" },
+                { request: "returned", books: returnedBooks, fill: "var(--color-returned)" },
+            ];
+            res.status(200).json(chartData);
             return;
         }
         catch (error) {
             console.log(error);
-            res.status(500).json({ message: "Internal Server Error" });
+            res.status(500).json({ message: "Internal server error" });
             return;
         }
     });
 });
-exports.default = userbookRouter;
+exports.default = statisticsRouter;

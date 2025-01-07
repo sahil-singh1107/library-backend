@@ -26,7 +26,7 @@ loginRouter.post("/", async function (req, res) {
 
         const token = jwt.sign({ email }, secret, {expiresIn: "2h"});
 
-        res.status(200).json({ token, message: "Login Successful" });
+        res.status(200).json({ token, message: "Login Successful", email : user.email });
 
         return;
 

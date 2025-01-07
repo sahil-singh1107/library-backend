@@ -16,6 +16,7 @@ const makeTransactionRoute_1 = __importDefault(require("./routes/transactions/ma
 const readTransaction_1 = __importDefault(require("./routes/transactions/readTransaction"));
 const updateTransaction_1 = __importDefault(require("./routes/transactions/updateTransaction"));
 const returnTransactionRoute_1 = __importDefault(require("./routes/transactions/returnTransactionRoute"));
+const libraryStatisticsRoute_1 = __importDefault(require("./routes/transactions/libraryStatisticsRoute"));
 var cors = require('cors');
 dotenv.config();
 const port = process.env.PORT || 3000;
@@ -28,12 +29,13 @@ app.use("/api/v1/login", loginRoute_1.default);
 app.use("/api/v1/addBook", addRoute_1.default);
 app.use("/api/v1/updateBook", updateRoute_1.default);
 app.use("/api/v1/allBooks", readRoute_1.default);
-app.use("api/v1/deleteBook", deleteRoute_1.default);
+app.use("/api/v1/deleteBook", deleteRoute_1.default);
 app.use("/api/v1/userbooks", userbookRoute_1.default);
 app.use("/api/v1/maketransaction", makeTransactionRoute_1.default);
 app.use("/api/v1/readtransaction", readTransaction_1.default);
 app.use("/api/v1/updatetransaction", updateTransaction_1.default);
 app.use("/api/v1/returntransaction", returnTransactionRoute_1.default);
+app.use("/api/v1/getStats", libraryStatisticsRoute_1.default);
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });

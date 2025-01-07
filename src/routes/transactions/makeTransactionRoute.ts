@@ -5,10 +5,9 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 maketransactionRouter.post("/", checkUser, async function (req, res) {
-    const { email, title } = req.body
-
+    const { userId, title } = req.body
     try {
-        const user = await prisma.user.findUnique({ where: { email } })
+        const user = await prisma.user.findUnique({ where: { id :  userId} })
         const book = await prisma.book.findFirst({ where: { title } })
 
         if (!user) {
@@ -29,6 +28,7 @@ maketransactionRouter.post("/", checkUser, async function (req, res) {
             }
         })
         res.status(201).json({message : "Transaction created successfully"});
+        return;
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal Server Error" })
